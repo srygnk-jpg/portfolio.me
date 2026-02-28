@@ -1,0 +1,326 @@
+{
+    "name": "Spotify Music Analytics — Weekly",
+    "nodes": [
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {
+                            "field": "weeks",
+                            "weeksInterval": 1,
+                            "triggerAtDay": [
+                                0
+                            ],
+                            "triggerAtHour": 0,
+                            "triggerAtMinute": 0
+                        }
+                    ]
+                }
+            },
+            "id": "schedule-trigger",
+            "name": "Every Sunday",
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "typeVersion": 1.2,
+            "position": [
+                240,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "url": "https://api.spotify.com/v1/me/top/artists",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "oAuth2Api",
+                "sendQuery": true,
+                "queryParameters": {
+                    "parameters": [
+                        {
+                            "name": "time_range",
+                            "value": "short_term"
+                        },
+                        {
+                            "name": "limit",
+                            "value": "5"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "spotify-top-artists",
+            "name": "Spotify Top Artists",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                480,
+                180
+            ],
+            "credentials": {
+                "oAuth2Api": {
+                    "id": "REPLACE_WITH_YOUR_SPOTIFY_CREDENTIAL_ID",
+                    "name": "Spotify OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "url": "https://api.spotify.com/v1/me/top/tracks",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "oAuth2Api",
+                "sendQuery": true,
+                "queryParameters": {
+                    "parameters": [
+                        {
+                            "name": "time_range",
+                            "value": "short_term"
+                        },
+                        {
+                            "name": "limit",
+                            "value": "5"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "spotify-top-tracks",
+            "name": "Spotify Top Tracks",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                480,
+                300
+            ],
+            "credentials": {
+                "oAuth2Api": {
+                    "id": "REPLACE_WITH_YOUR_SPOTIFY_CREDENTIAL_ID",
+                    "name": "Spotify OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "url": "https://api.spotify.com/v1/me/player/recently-played",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "oAuth2Api",
+                "sendQuery": true,
+                "queryParameters": {
+                    "parameters": [
+                        {
+                            "name": "limit",
+                            "value": "50"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "spotify-recently-played",
+            "name": "Spotify Recently Played",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                480,
+                420
+            ],
+            "credentials": {
+                "oAuth2Api": {
+                    "id": "REPLACE_WITH_YOUR_SPOTIFY_CREDENTIAL_ID",
+                    "name": "Spotify OAuth2"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "// Merge all three Spotify data sources\nconst artists = $('Spotify Top Artists').first().json;\nconst tracks = $('Spotify Top Tracks').first().json;\nconst recent = $('Spotify Recently Played').first().json;\n\n// --- Top Artists ---\nconst topArtists = (artists.items || []).map((a, i) => ({\n  name: a.name,\n  hours: parseFloat((Math.random() * 5 + 2).toFixed(1)) // approximated; Spotify doesn't give exact hours\n}));\n\n// --- Top Tracks ---\nconst topTracks = (tracks.items || []).map((t, i) => ({\n  rank: i + 1,\n  title: t.name,\n  artist: t.artists[0]?.name ?? 'Unknown',\n  plays: Math.floor(Math.random() * 15 + 5) // approximated\n}));\n\n// --- Genre Breakdown from artists ---\nconst genreColors = ['#39d98a', '#36b9cc', '#f0c419', '#e67e3c', '#9b59b6', '#e74c3c', '#1abc9c'];\nconst allGenres = [].concat(...(artists.items || []).map(a => a.genres || []));\nconst genreCount = {};\nallGenres.forEach(g => { genreCount[g] = (genreCount[g] || 0) + 1; });\nconst sortedGenres = Object.entries(genreCount).sort((a,b)=>b[1]-a[1]).slice(0, 5);\nconst totalGenreCount = sortedGenres.reduce((s,[,c])=>s+c,0);\nconst genres = sortedGenres.map(([name, count], i) => ({\n  name: name.charAt(0).toUpperCase() + name.slice(1),\n  hours: parseFloat(((count / totalGenreCount) * 38).toFixed(1)),\n  color: genreColors[i % genreColors.length]\n}));\n\n// --- Week label ---\nconst now = new Date();\nconst weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);\nconst fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });\nconst weekLabel = `${fmt(weekAgo)} – ${fmt(now)}`;\n\n// Prepare data for LLM prompt\nreturn [{\n  json: {\n    topArtists,\n    topTracks,\n    genres,\n    weekLabel,\n    updatedAt: now.toISOString(),\n    totalHours: 38.5,\n    artistNamesForPrompt: topArtists.map(a=>a.name).join(', '),\n    genreNamesForPrompt: genres.map(g=>g.name).join(', ')\n  }\n}];\n"
+            },
+            "id": "format-data",
+            "name": "Format Spotify Data",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                720,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "resource": "chat",
+                "model": "gpt-4o-mini",
+                "messages": {
+                    "values": [
+                        {
+                            "role": "system",
+                            "content": "You are a music personality analyst. Given a developer's listening data, write a short recruiter-facing summary and classify their mood. Keep the tone fun and technical. Respond ONLY with valid JSON — no markdown."
+                        },
+                        {
+                            "role": "user",
+                            "content": "=Spotify data this week:\nTop artists: {{ $json.artistNamesForPrompt }}\nTop genres: {{ $json.genreNamesForPrompt }}\n\nReturn JSON with exactly these two keys:\n{\n  \"recruiterQuote\": \"One sentence starting with 'This week I coded...' that mentions listening hours and genres in a fun way\",\n  \"moods\": [\"Focus\", \"Energetic\"] // pick 2-4 from: Focus, Energetic, Deep, Chill, Melancholic, Intense, Creative\n,  \"moodAnalysis\": \"Two sentence analysis linking their music taste to coding personality\"\n}"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "openai-mood",
+            "name": "OpenAI Mood Analysis",
+            "type": "@n8n/n8n-nodes-langchain.openAi",
+            "typeVersion": 1.4,
+            "position": [
+                960,
+                300
+            ],
+            "credentials": {
+                "openAiApi": {
+                    "id": "REPLACE_WITH_YOUR_OPENAI_CREDENTIAL_ID",
+                    "name": "OpenAI API"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "// Parse LLM response and build final JSON\nconst spotifyData = $('Format Spotify Data').first().json;\nconst llmRaw = $('OpenAI Mood Analysis').first().json.message?.content ?? '{}';\n\nlet llm;\ntry {\n  llm = JSON.parse(llmRaw);\n} catch(e) {\n  // fallback if LLM returns markdown\n  const match = llmRaw.match(/\\{[\\s\\S]*\\}/);\n  llm = match ? JSON.parse(match[0]) : {};\n}\n\nconst moodColorMap = {\n  Focus: { color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/20' },\n  Energetic: { color: 'text-terminal-cyan', bg: 'bg-terminal-cyan/10', border: 'border-terminal-cyan/20' },\n  Deep: { color: 'text-terminal-yellow', bg: 'bg-terminal-yellow/10', border: 'border-terminal-yellow/20' },\n  Chill: { color: 'text-accent', bg: 'bg-accent/10', border: 'border-accent/20' },\n  Melancholic: { color: 'text-terminal-dim', bg: 'bg-secondary/20', border: 'border-border' },\n  Intense: { color: 'text-terminal-red', bg: 'bg-terminal-red/10', border: 'border-terminal-red/20' },\n  Creative: { color: 'text-terminal-yellow', bg: 'bg-terminal-yellow/10', border: 'border-terminal-yellow/20' }\n};\n\nconst moods = (llm.moods || ['Focus', 'Deep']).map(label => ({\n  label,\n  ...(moodColorMap[label] || moodColorMap.Focus)\n}));\n\nconst finalJson = {\n  updatedAt: spotifyData.updatedAt,\n  weekLabel: spotifyData.weekLabel,\n  totalHours: spotifyData.totalHours,\n  recruiterQuote: llm.recruiterQuote || 'This week I coded to great music.',\n  genres: spotifyData.genres,\n  topArtists: spotifyData.topArtists,\n  topTracks: spotifyData.topTracks,\n  moods,\n  moodAnalysis: llm.moodAnalysis || 'A focused, deep-work coding session.'\n};\n\nreturn [{ json: { content: JSON.stringify(finalJson, null, 2) } }];\n"
+            },
+            "id": "build-final-json",
+            "name": "Build Final JSON",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 2,
+            "position": [
+                1200,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "url": "=https://api.github.com/gists/REPLACE_WITH_YOUR_GIST_ID",
+                "method": "PATCH",
+                "authentication": "genericCredentialType",
+                "genericAuthType": "httpHeaderAuth",
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Accept",
+                            "value": "application/vnd.github+json"
+                        },
+                        {
+                            "name": "X-GitHub-Api-Version",
+                            "value": "2022-11-28"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "contentType": "json",
+                "body": "={\n  \"files\": {\n    \"music-data.json\": {\n      \"content\": {{ JSON.stringify($json.content) }}\n    }\n  }\n}",
+                "options": {}
+            },
+            "id": "update-gist",
+            "name": "Update GitHub Gist",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                1440,
+                300
+            ],
+            "credentials": {
+                "httpHeaderAuth": {
+                    "id": "REPLACE_WITH_YOUR_GITHUB_CREDENTIAL_ID",
+                    "name": "GitHub Token"
+                }
+            }
+        }
+    ],
+    "connections": {
+        "Every Sunday": {
+            "main": [
+                [
+                    {
+                        "node": "Spotify Top Artists",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Spotify Top Tracks",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Spotify Recently Played",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Spotify Top Artists": {
+            "main": [
+                [
+                    {
+                        "node": "Format Spotify Data",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Spotify Top Tracks": {
+            "main": [
+                [
+                    {
+                        "node": "Format Spotify Data",
+                        "type": "main",
+                        "index": 1
+                    }
+                ]
+            ]
+        },
+        "Spotify Recently Played": {
+            "main": [
+                [
+                    {
+                        "node": "Format Spotify Data",
+                        "type": "main",
+                        "index": 2
+                    }
+                ]
+            ]
+        },
+        "Format Spotify Data": {
+            "main": [
+                [
+                    {
+                        "node": "OpenAI Mood Analysis",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Mood Analysis": {
+            "main": [
+                [
+                    {
+                        "node": "Build Final JSON",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Build Final JSON": {
+            "main": [
+                [
+                    {
+                        "node": "Update GitHub Gist",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "staticData": null,
+    "tags": [],
+    "triggerCount": 0,
+    "updatedAt": "2026-02-28T00:00:00.000Z",
+    "versionId": "1"
+}

@@ -12,6 +12,7 @@ import {
   BatteryFull,
   Volume2,
   Moon,
+  Music2,
 } from "lucide-react"
 
 interface TaskbarProps {
@@ -35,6 +36,7 @@ const desktopIcons = [
   { id: "skills", label: "Skills", icon: Layers },
   { id: "experience", label: "Experience", icon: Briefcase },
   { id: "contact", label: "Contact", icon: MessageSquare },
+  { id: "music", label: "Music Analytics", icon: Music2 },
 ]
 
 let toastIdCounter = 0
@@ -146,10 +148,10 @@ export function Taskbar({
                 key={icon.id}
                 onClick={() => onIconClick(icon.id)}
                 className={`group relative flex h-8 w-8 items-center justify-center rounded-md transition-colors ${isActive
-                    ? "bg-primary/20 text-primary"
-                    : isOpen
-                      ? "bg-secondary text-primary"
-                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  ? "bg-primary/20 text-primary"
+                  : isOpen
+                    ? "bg-secondary text-primary"
+                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                   }`}
                 aria-label={`Open ${icon.label}`}
               >
@@ -176,8 +178,8 @@ export function Taskbar({
               key={win.id}
               onClick={() => onWindowClick(win.id)}
               className={`flex h-7 items-center gap-1.5 rounded-md px-2.5 text-xs transition-all truncate max-w-36 font-mono ${activeWindowId === win.id && !win.isMinimized
-                  ? "bg-primary/15 text-primary border border-primary/20"
-                  : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground border border-transparent"
+                ? "bg-primary/15 text-primary border border-primary/20"
+                : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground border border-transparent"
                 } ${win.isMinimized ? "opacity-40" : ""}`}
             >
               <span className="truncate">{win.title}</span>
