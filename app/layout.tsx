@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { JetBrains_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
+
 import './globals.css'
 
 // Use JetBrains Mono for the entire app — authentic terminal feel
@@ -45,7 +45,7 @@ export default function RootLayout({
     <html lang="en" className={jetbrainsMono.variable}>
       <body className="font-mono antialiased overflow-hidden">
         {children}
-        <Analytics />
+
       </body>
     </html>
   )
