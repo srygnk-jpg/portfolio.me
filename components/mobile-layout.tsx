@@ -35,7 +35,7 @@ export function MobileLayout() {
     const [active, setActive] = useState("about")
 
     return (
-        <div className="flex flex-col h-screen w-screen bg-background overflow-hidden font-mono">
+        <div className="flex flex-col h-[100dvh] w-screen bg-background overflow-hidden font-mono">
             {/* ── Top header bar ── */}
             <header className="flex items-center justify-between px-4 py-3 border-b border-border bg-card/80 backdrop-blur-xl shrink-0">
                 <div className="flex items-center gap-2">
@@ -58,7 +58,7 @@ export function MobileLayout() {
             </div>
 
             {/* ── Content area ── */}
-            <main className="flex-1 overflow-auto px-4 py-4 pb-32">
+            <main className="flex-1 overflow-y-auto px-4 py-4 pb-40">
                 <SectionContent id={active} />
             </main>
 
