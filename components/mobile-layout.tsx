@@ -58,12 +58,12 @@ export function MobileLayout() {
             </div>
 
             {/* ── Content area ── */}
-            <main className="flex-1 overflow-auto px-4 py-4 pb-24">
+            <main className="flex-1 overflow-auto px-4 py-4 pb-32">
                 <SectionContent id={active} />
             </main>
 
             {/* ── Bottom nav ── */}
-            <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-card/95 backdrop-blur-xl px-2 py-2 shrink-0">
+            <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-border bg-card/95 backdrop-blur-xl px-2 pt-2 shrink-0" style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}>
                 {sections.map(({ id, label, icon: Icon }) => {
                     const isActive = active === id
                     return (
@@ -71,8 +71,8 @@ export function MobileLayout() {
                             key={id}
                             onClick={() => setActive(id)}
                             className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all ${isActive
-                                    ? "text-primary bg-primary/10"
-                                    : "text-muted-foreground hover:text-foreground"
+                                ? "text-primary bg-primary/10"
+                                : "text-muted-foreground hover:text-foreground"
                                 }`}
                         >
                             <Icon className="h-4 w-4" />
