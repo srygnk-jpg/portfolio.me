@@ -13,6 +13,7 @@ import {
   HardDrive,
   Clock,
   Globe,
+  Music2,
 } from "lucide-react"
 import { OsWindow } from "./os-window"
 import { Terminal } from "./terminal"
@@ -23,6 +24,7 @@ import {
   SkillsContent,
   ExperienceContent,
   ContactContent,
+  MusicContent,
 } from "./window-contents"
 
 interface WindowState {
@@ -78,6 +80,12 @@ const windowConfigs: Record<
     icon: <MessageSquare className="h-3.5 w-3.5" />,
     defaultPosition: { x: 340, y: 80 },
     defaultSize: { width: 500, height: 460 },
+  },
+  music: {
+    title: "music.analytics",
+    icon: <Music2 className="h-3.5 w-3.5" />,
+    defaultPosition: { x: 160, y: 60 },
+    defaultSize: { width: 560, height: 560 },
   },
 }
 
@@ -189,7 +197,7 @@ export function Desktop() {
         document.documentElement.classList.toggle("dark")
         return
       }
-      if (["about", "projects", "skills", "experience", "contact"].includes(cmd)) {
+      if (["about", "projects", "skills", "experience", "contact", "music"].includes(cmd)) {
         openWindow(cmd)
       }
     },
@@ -224,6 +232,8 @@ export function Desktop() {
         return <ExperienceContent />
       case "contact":
         return <ContactContent />
+      case "music":
+        return <MusicContent />
       default:
         return null
     }
