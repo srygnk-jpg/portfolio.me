@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#0d1117"/>
+  <!-- Terminal bracket: < -->
+  <path d="M5 16 L10 11 L10 13 L7.5 16 L10 19 L10 21 Z" fill="#00ff9d"/>
+  <!-- Terminal bracket: /> -->
+  <path d="M14 11 L17 21" stroke="#00ff9d" stroke-width="2" stroke-linecap="round"/>
+  <path d="M20 16 L25 11 L25 13 L22.5 16 L25 19 L25 21 Z" fill="#00ff9d" transform="scale(-1,1) translate(-32,0)"/>
+</svg>
