@@ -10,9 +10,6 @@ const nextConfig = {
     NEXT_PUBLIC_MUSIC_DATA_URL: process.env.NEXT_PUBLIC_MUSIC_DATA_URL ||
       'https://gist.githubusercontent.com/srygnk-jpg/e93cf6c8e5a1425bfc4b354485ad8bd9/raw/music-data.json',
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   images: {
     unoptimized: true,
   },

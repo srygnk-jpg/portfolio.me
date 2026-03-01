@@ -4,13 +4,11 @@ import { useState } from "react"
 import {
     Terminal, User, FolderGit2, Cpu, Briefcase, Mail,
 } from "lucide-react"
-import {
-    AboutContent,
-    ProjectsContent,
-    SkillsContent,
-    ExperienceContent,
-    ContactContent,
-} from "./window-contents"
+import { AboutContent } from "./windows/AboutContent"
+import { ProjectsContent } from "./windows/ProjectsContent"
+import { SkillsContent } from "./windows/SkillsContent"
+import { ExperienceContent } from "./windows/ExperienceContent"
+import { ContactContent } from "./windows/ContactContent"
 
 const sections = [
     { id: "about", label: "About", icon: User, prompt: "cat README.md" },

@@ -18,14 +18,13 @@ import {
 import { OsWindow } from "./os-window"
 import { Terminal } from "./terminal"
 import { Taskbar } from "./taskbar"
-import {
-  AboutContent,
-  ProjectsContent,
-  SkillsContent,
-  ExperienceContent,
-  ContactContent,
-  MusicContent,
-} from "./window-contents"
+import { AboutContent } from "./windows/AboutContent"
+import { ProjectsContent } from "./windows/ProjectsContent"
+import { SkillsContent } from "./windows/SkillsContent"
+import { ExperienceContent } from "./windows/ExperienceContent"
+import { ContactContent } from "./windows/ContactContent"
+import { MusicContent } from "./windows/MusicContent"
+import { useAnimatedStat } from "@/hooks/use-animated-stat"
 
 interface WindowState {
   id: string
@@ -87,18 +86,6 @@ const windowConfigs: Record<
     defaultPosition: { x: 160, y: 60 },
     defaultSize: { width: 560, height: 560 },
   },
-}
-
-// Fake animated CPU stat
-function useAnimatedStat(base: number, variance: number, interval: number) {
-  const [value, setValue] = useState(base)
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setValue(Math.min(99, Math.max(5, base + Math.round((Math.random() - 0.5) * variance * 2))))
-    }, interval)
-    return () => clearInterval(timer)
-  }, [base, variance, interval])
-  return value
 }
 
 export function Desktop() {

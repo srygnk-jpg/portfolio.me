@@ -203,8 +203,8 @@ export function Taskbar({
             </span>
           </button>
 
-          <Wifi className="h-3.5 w-3.5" title="WiFi" />
-          <Volume2 className="h-3.5 w-3.5" title="Volume" />
+          <Wifi className="h-3.5 w-3.5" aria-label="WiFi" />
+          <Volume2 className="h-3.5 w-3.5" aria-label="Volume" />
 
           {/* Battery — powered by caffeine */}
           <button
