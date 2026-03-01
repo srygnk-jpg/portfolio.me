@@ -27,7 +27,7 @@ export function AboutContent() {
             { key: "location", value: '"Calicut, India"', color: "text-primary" },
             { key: "education", value: '"B.Tech Information Technology"', color: "text-primary" },
             { key: "interests", value: '["Development", "AI", "Systems Design"]', color: "text-foreground" },
-            { key: "status", value: '"Available for opportunities ✨"', color: "text-terminal-cyan" },
+            { key: "status", value: '"Learning new things everyday 🎯"', color: "text-terminal-cyan" },
           ].map(({ key, value, color }) => (
             <div key={key} className="flex flex-wrap gap-1">
               <span className="text-terminal-cyan">{"const"}</span>
@@ -66,7 +66,7 @@ export function AboutContent() {
         <span className="text-terminal-dim">|</span>
         <span className="inline-flex items-center gap-1">
           <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-          Open to work
+          curiously building
         </span>
       </div>
     </div>

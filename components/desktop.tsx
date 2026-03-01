@@ -253,7 +253,7 @@ export function Desktop() {
               ))}
             </div>
             <div className="text-xs text-muted-foreground font-mono">
-              <span className="text-primary">●</span> Available for opportunities
+              <span className="text-primary">●</span> Curiously building
             </div>
           </div>
 
