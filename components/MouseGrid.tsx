@@ -13,9 +13,6 @@ export function MouseGrid() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    const CELL = 48
-    const RADIUS = 180
-
     const resize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
@@ -36,44 +33,30 @@ export function MouseGrid() {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       const { x, y } = mouse.current
-
-      // clip to radial area
-      ctx.save()
-      const clip = new Path2D()
-      clip.arc(x, y, RADIUS, 0, Math.PI * 2)
-      ctx.clip(clip)
-
-      // create radial gradient mask for fade at edges
-      const grad = ctx.createRadialGradient(x, y, 0, x, y, RADIUS)
-      grad.addColorStop(0, "rgba(54, 185, 204, 0.6)")
-      grad.addColorStop(0.6, "rgba(54, 185, 204, 0.35)")
-      grad.addColorStop(1, "rgba(54, 185, 204, 0)")
-
-      ctx.strokeStyle = grad
-      ctx.lineWidth = 0.7
-
-      // vertical lines
-      const startX = Math.floor((x - RADIUS) / CELL) * CELL
-      const endX = Math.ceil((x + RADIUS) / CELL) * CELL
-      const startY = Math.floor((y - RADIUS) / CELL) * CELL
-      const endY = Math.ceil((y + RADIUS) / CELL) * CELL
-
-      for (let lx = startX; lx <= endX; lx += CELL) {
-        ctx.beginPath()
-        ctx.moveTo(lx, startY)
-        ctx.lineTo(lx, endY)
-        ctx.stroke()
+      if (x < 0) {
+        raf.current = requestAnimationFrame(draw)
+        return
       }
 
-      // horizontal lines
-      for (let ly = startY; ly <= endY; ly += CELL) {
-        ctx.beginPath()
-        ctx.moveTo(startX, ly)
-        ctx.lineTo(endX, ly)
-        ctx.stroke()
-      }
+      // Outer soft halo
+      const outerGrad = ctx.createRadialGradient(x, y, 0, x, y, 320)
+      outerGrad.addColorStop(0, "rgba(54, 185, 204, 0.07)")
+      outerGrad.addColorStop(0.4, "rgba(54, 185, 204, 0.04)")
+      outerGrad.addColorStop(1, "rgba(54, 185, 204, 0)")
+      ctx.fillStyle = outerGrad
+      ctx.beginPath()
+      ctx.arc(x, y, 320, 0, Math.PI * 2)
+      ctx.fill()
 
-      ctx.restore()
+      // Inner bright core glow
+      const innerGrad = ctx.createRadialGradient(x, y, 0, x, y, 80)
+      innerGrad.addColorStop(0, "rgba(54, 185, 204, 0.18)")
+      innerGrad.addColorStop(0.5, "rgba(54, 185, 204, 0.07)")
+      innerGrad.addColorStop(1, "rgba(54, 185, 204, 0)")
+      ctx.fillStyle = innerGrad
+      ctx.beginPath()
+      ctx.arc(x, y, 80, 0, Math.PI * 2)
+      ctx.fill()
 
       raf.current = requestAnimationFrame(draw)
     }

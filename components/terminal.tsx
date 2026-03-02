@@ -12,7 +12,7 @@ interface TerminalLine {
 const COMMANDS = [
   "help", "about", "projects", "skills", "experience", "contact",
   "clear", "theme", "whoami", "neofetch", "ls", "pwd", "date", "echo ", "open ", "resume",
-  "spotify", "joke", "weather",
+  "spotify", "joke", "weather", "ssh hire@me",
 ]
 
 const HELP_TEXT = `Available commands:
@@ -33,7 +33,31 @@ const HELP_TEXT = `Available commands:
   resume      Download / view resume
   spotify     Show currently playing song
   joke        Fetch a random dev joke
-  weather     Show current weather (Calicut)`
+  weather     Show current weather
+  ssh hire@me Unlock developer access 🔐`
+
+const SSH_HIRE_FRAMES: [string, TerminalLine["type"], number][] = [
+  ["Connecting to hire@me...", "info", 0],
+  ["Authenticating...", "info", 500],
+  ["Verifying credentials... ██████████ 100%", "info", 900],
+  ["", "output", 300],
+  ["╔══════════════════════════════════════════╗", "success", 200],
+  ["║                                          ║", "success", 60],
+  ["║        ✓  ACCESS GRANTED  ✓              ║", "success", 60],
+  ["║                                          ║", "success", 60],
+  ["╚══════════════════════════════════════════╝", "success", 60],
+  ["", "output", 200],
+  ["  Name    : Sreeyuktha", "output", 150],
+  ["  Role    : Backend Developer", "output", 120],
+  ["  Stack   : Java · Spring Boot · Python · AI", "output", 120],
+  ["  Base    : Calicut, Kerala 🇮🇳", "output", 120],
+  ["", "output", 80],
+  ["  📧  srygnk@gmail.com", "success", 150],
+  ["  🔗  linkedin.com/in/sreeyukthagnk", "success", 100],
+  ["", "output", 80],
+  ["  → Open contact window to get in touch!", "info", 200],
+  ["", "output", 0],
+]
 
 const NEOFETCH = `
        .--.         dev@portfolio
@@ -252,6 +276,23 @@ export function Terminal({ onCommand }: TerminalProps) {
               ...prev.filter((l) => l.id !== loadingId),
               { id: nextId(), type: "success", text: result },
             ])
+          })
+          return
+        }
+        case "ssh hire@me": {
+          // Typewriter-style animated access-granted sequence
+          setLines([
+            ...newLines,
+          ])
+          let accumulated: TerminalLine[] = [...newLines]
+          let delay = 0
+          SSH_HIRE_FRAMES.forEach(([text, type, frameDelay]) => {
+            delay += frameDelay
+            const id = nextId()
+            setTimeout(() => {
+              accumulated = [...accumulated, { id, type, text }]
+              setLines([...accumulated])
+            }, delay)
           })
           return
         }
