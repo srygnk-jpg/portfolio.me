@@ -9,6 +9,7 @@ import { ProjectsContent } from "./windows/ProjectsContent"
 import { SkillsContent } from "./windows/SkillsContent"
 import { ExperienceContent } from "./windows/ExperienceContent"
 import { ContactContent } from "./windows/ContactContent"
+import { SiteFooter } from "./site-footer"
 
 const sections = [
     { id: "about", label: "About", icon: User, prompt: "cat README.md" },
@@ -58,6 +59,7 @@ export function MobileLayout() {
             {/* ── Content area ── */}
             <main className="flex-1 overflow-y-auto px-4 py-4 pb-40">
                 <SectionContent id={active} />
+                <SiteFooter className="mt-8 pt-4 border-t border-border text-center font-mono space-y-0.5" />
             </main>
 
             {/* ── Bottom nav ── */}

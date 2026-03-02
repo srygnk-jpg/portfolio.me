@@ -377,7 +377,7 @@ export function Terminal({ onCommand }: TerminalProps) {
             )}
             {line.type === "info" && (
               line.text.startsWith("──")
-                ? <span style={{ color: "#ff2d78", textShadow: "0 0 6px #ff2d78" }}>{line.text}</span>
+                ? <span className="text-border/60">{line.text}</span>
                 : <span className="text-terminal-dim">{line.text}</span>
             )}
             {line.type === "warning" && (

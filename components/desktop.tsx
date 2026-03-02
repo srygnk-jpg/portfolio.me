@@ -25,6 +25,7 @@ import { ExperienceContent } from "./windows/ExperienceContent"
 import { ContactContent } from "./windows/ContactContent"
 import { MusicContent } from "./windows/MusicContent"
 import { TicTacToe } from "./TicTacToe"
+import { SiteFooter } from "./site-footer"
 import { useNowPlaying } from "./NowPlaying"
 import { useAnimatedStat } from "@/hooks/use-animated-stat"
 
@@ -330,6 +331,7 @@ export function Desktop() {
               ))}
             </div>
           </div>
+
         </div>
 
         {/* Tic-Tac-Toe — shown when all windows are closed/minimized */}
@@ -341,14 +343,15 @@ export function Desktop() {
           </div>
         )}
 
-        {/* Desktop hint — shown when <=1 window open */}
+        {/* Desktop hint + footer — shown when <=1 window open */}
         {windows.length <= 1 && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[1] animate-fade-in-up">
-            <div className="glass rounded-full px-5 py-2 text-xs text-muted-foreground font-mono">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[1] animate-fade-in-up flex flex-col items-center gap-4">
+            <div className="glass rounded-full px-7 py-3 text-sm text-muted-foreground font-mono">
               <span className="text-primary">$</span> type{" "}
               <kbd className="rounded bg-secondary px-1 text-terminal-cyan">help</kbd>{" "}
               in the terminal or click taskbar icons to explore
             </div>
+            <SiteFooter className="font-mono text-center" />
           </div>
         )}
 
