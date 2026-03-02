@@ -1,34 +1,31 @@
 {
-  "updatedAt": "2026-02-23T00:00:00Z",
-  "weekLabel": "Feb 17 – Feb 23",
-  "totalHours": 38.5,
-  "recruiterQuote": "This week I coded 14 hrs to techno, 9 hrs to lo-fi & jazz. Automation ≠ boring.",
-  "genres": [
-    { "name": "Techno", "hours": 14.2, "color": "#39d98a" },
-    { "name": "Lo-Fi", "hours": 9.1,  "color": "#36b9cc" },
-    { "name": "Jazz",  "hours": 6.8,  "color": "#f0c419" },
-    { "name": "Drum & Bass", "hours": 5.3, "color": "#e67e3c" },
-    { "name": "Ambient", "hours": 3.1, "color": "#9b59b6" }
+  "formattedData": "{\n  \"topArtists\": [\n    {\n      \"name\": \"Shankar-Ehsaan-Loy\",\n      \"genres\": [\n        \"bollywood\",\n        \"desi\",\n        \"sufi\",\n        \"hindi pop\"\n      ],\n      \"popularity\": 73\n    },\n    {\n      \"name\": \"Chinmayi\",\n      \"genres\": [\n        \"tamil pop\",\n        \"marathi pop\",\n        \"kollywood\",\n        \"tollywood\",\n        \"telugu pop\",\n        \"bollywood\"\n      ],\n      \"popularity\": 75\n    },\n    {\n      \"name\": \"Sudeep Palanad\",\n      \"genres\": [\n        \"mollywood\",\n        \"malayalam pop\"\n      ],\n      \"popularity\": 32\n    }\n  ],\n  \"topTracks\": [],\n  \"recentlyPlayed\": [\n    {\n      \"trackName\": \"Thaamaranoolinaal\",\n      \"artist\": \"Ouseppachan\"\n    },\n    {\n      \"trackName\": \"Sree Vinayagam\",\n      \"artist\": \"K. J. Yesudas\"\n    },\n    {\n      \"trackName\": \"Reghuvamsham\",\n      \"artist\": \"K. J. Yesudas\"\n    },\n    {\n      \"trackName\": \"Gopangane\",\n      \"artist\": \"K. J. Yesudas\"\n    },\n    {\n      \"trackName\": \"Ramakadha\",\n      \"artist\": \"K. J. Yesudas\"\n    },\n    {\n      \"trackName\": \"Neelaravil\",\n      \"artist\": \"K. J. Yesudas\"\n    },\n    {\n      \"trackName\": \"Nilaavinte Neelabhasma\",\n      \"artist\": \"Gireesh Puthenchery\"\n    },\n    {\n      \"trackName\": \"Thoomanjin Nenchilothungi\",\n      \"artist\": \"K. J. Yesudas\"\n    },\n    {\n      \"trackName\": \"Oru Pushpam Mathramen\",\n      \"artist\": \"K. J. Yesudas\"\n    },\n    {\n      \"trackName\": \"Endhe Innum\",\n      \"artist\": \"Vidyasagar\"\n    },\n    {\n      \"trackName\": \"Sajdaa\",\n      \"artist\": \"Shankar-Ehsaan-Loy\"\n    },\n    {\n      \"trackName\": \"Beautiful Things\",\n      \"artist\": \"Benson Boone\"\n    },\n    {\n      \"trackName\": \"Ninnal (Malayalam Lullaby)\",\n      \"artist\": \"Priya Venugopal\"\n    },\n    {\n      \"trackName\": \"Who Says\",\n      \"artist\": \"Selena Gomez & The Scene\"\n    },\n    {\n      \"trackName\": \"Runaway\",\n      \"artist\": \"AURORA\"\n    },\n    {\n      \"trackName\": \"Love Me Like You Do\",\n      \"artist\": \"Ellie Goulding\"\n    },\n    {\n      \"trackName\": \"Dandelions - slowed + reverb\",\n      \"artist\": \"Ruth B.\"\n    },\n    {\n      \"trackName\": \"Kaakum Vadivel\",\n      \"artist\": \"Dharan Kumar\"\n    },\n    {\n      \"trackName\": \"Suzume\",\n      \"artist\": \"RADWIMPS\"\n    },\n    {\n      \"trackName\": \"a thousand years\",\n      \"artist\": \"Christina Perri\"\n    }\n  ],\n  \"timestamp\": \"2026-03-02T09:19:41.823Z\"\n}",
+  "recruiterQuote": "This week I coded to bollywood & desi - pure focus mode.",
+  "moodLabels": [
+    "Energetic",
+    "Chill"
   ],
-  "topArtists": [
-    { "name": "Aphex Twin",       "hours": 8.4 },
-    { "name": "Four Tet",         "hours": 6.9 },
-    { "name": "Floating Points",  "hours": 5.2 },
-    { "name": "Nujabes",          "hours": 4.8 },
-    { "name": "Jon Hopkins",      "hours": 3.6 }
-  ],
-  "topTracks": [
-    { "rank": 1, "title": "Xtal",                   "artist": "Aphex Twin",      "plays": 23 },
-    { "rank": 2, "title": "Moth",                   "artist": "Four Tet",        "plays": 17 },
-    { "rank": 3, "title": "LesAlpx",                "artist": "Aphex Twin",      "plays": 15 },
-    { "rank": 4, "title": "Nacht 001",              "artist": "Floating Points", "plays": 12 },
-    { "rank": 5, "title": "Aruarian Dance",         "artist": "Nujabes",         "plays": 11 }
-  ],
-  "moods": [
-    { "label": "Focus",     "color": "text-primary",          "bg": "bg-primary/10",          "border": "border-primary/20" },
-    { "label": "Energetic", "color": "text-terminal-cyan",    "bg": "bg-terminal-cyan/10",    "border": "border-terminal-cyan/20" },
-    { "label": "Deep",      "color": "text-terminal-yellow",  "bg": "bg-terminal-yellow/10",  "border": "border-terminal-yellow/20" },
-    { "label": "Chill",     "color": "text-accent",           "bg": "bg-accent/10",           "border": "border-accent/20" }
-  ],
-  "moodAnalysis": "Heavy focus on rhythmic, repetitive music — strong indicator of deep-work coding sessions. Ambient & jazz bookend late-night debugging."
+  "moodAnalysis": "My listening this week is dominated by bollywood and desi, indicating energetic work sessions.",
+  "topGenres": [
+    {
+      "name": "bollywood",
+      "count": 2
+    },
+    {
+      "name": "desi",
+      "count": 1
+    },
+    {
+      "name": "sufi",
+      "count": 1
+    },
+    {
+      "name": "hindi pop",
+      "count": 1
+    },
+    {
+      "name": "tamil pop",
+      "count": 1
+    }
+  ]
 }
