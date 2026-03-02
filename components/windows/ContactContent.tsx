@@ -56,16 +56,35 @@ export function ContactContent() {
     <div className="space-y-4 font-mono text-sm h-full overflow-auto">
       <div className="text-terminal-dim text-xs">{"$ ./contact_form.sh"}</div>
 
-      {/* Copy-email quick action */}
-      <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/20 px-3 py-2">
-        <Mail className="h-3.5 w-3.5 text-terminal-cyan shrink-0" />
-        <span className="text-xs text-foreground flex-1">{EMAIL}</span>
-        <button
-          onClick={copyEmail}
-          className="text-[10px] rounded px-2 py-1 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors"
+      {/* Quick links row — always visible */}
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-1 rounded-lg border border-border bg-secondary/20 px-3 py-2">
+          <Mail className="h-3.5 w-3.5 text-terminal-cyan shrink-0" />
+          <span className="text-xs text-foreground flex-1 truncate">{EMAIL}</span>
+          <button
+            onClick={copyEmail}
+            className="text-[10px] rounded px-2 py-1 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors shrink-0"
+          >
+            {copied ? "✓ copied!" : "copy"}
+          </button>
+        </div>
+        <a
+          href="https://www.linkedin.com/in/sreeyukthagnk/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary/20 px-3 py-2 text-xs text-muted-foreground hover:text-terminal-cyan hover:border-terminal-cyan/30 transition-colors shrink-0"
         >
-          {copied ? "✓ copied!" : "copy"}
-        </button>
+          <Linkedin className="h-3.5 w-3.5" />
+          LinkedIn
+          <ExternalLink className="h-2.5 w-2.5" />
+        </a>
+        <a
+          href={`mailto:${EMAIL}`}
+          className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary/20 px-3 py-2 text-xs text-muted-foreground hover:text-terminal-yellow hover:border-terminal-yellow/30 transition-colors shrink-0"
+        >
+          <Mail className="h-3.5 w-3.5" />
+          Email
+        </a>
       </div>
 
       {submitStatus === "success" ? (
@@ -132,29 +151,6 @@ export function ContactContent() {
         </form>
       )}
 
-      {/* Social links */}
-      <div className="border-t border-border pt-3">
-        <div className="text-terminal-dim text-[10px] mb-2">{"// social_links"}</div>
-        <div className="flex items-center gap-4 flex-wrap">
-          <a
-            href="https://www.linkedin.com/in/sreeyukthagnk/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-terminal-cyan"
-          >
-            <Linkedin className="h-3.5 w-3.5" />
-            LinkedIn
-            <ExternalLink className="h-2.5 w-2.5" />
-          </a>
-          <a
-            href={`mailto:${EMAIL}`}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-terminal-yellow"
-          >
-            <Mail className="h-3.5 w-3.5" />
-            Email
-          </a>
-        </div>
-      </div>
     </div>
   )
 }

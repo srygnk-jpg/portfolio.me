@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback } from "react"
+import { spotifyNowPlayingText } from "@/lib/spotify"
 
 interface TerminalLine {
   id: number
@@ -11,6 +12,7 @@ interface TerminalLine {
 const COMMANDS = [
   "help", "about", "projects", "skills", "experience", "contact",
   "clear", "theme", "whoami", "neofetch", "ls", "pwd", "date", "echo ", "open ", "resume",
+  "spotify", "joke", "weather",
 ]
 
 const HELP_TEXT = `Available commands:
@@ -28,7 +30,10 @@ const HELP_TEXT = `Available commands:
   pwd         Print working directory
   date        Show current date & time
   echo [msg]  Print a message
-  resume      Download / view resume`
+  resume      Download / view resume
+  spotify     Show currently playing song
+  joke        Fetch a random dev joke
+  weather     Show current weather (Calicut)`
 
 const NEOFETCH = `
        .--.         dev@portfolio
@@ -46,13 +51,93 @@ const NEOFETCH = `
                     GPU: Framer Motion
                     Memory: Infinite ideas™`
 
+async function spotifyNowPlaying(): Promise<string> {
+  return spotifyNowPlayingText()
+}
+
+async function fetchJoke(): Promise<string> {
+  try {
+    const res = await fetch("https://v2.jokeapi.dev/joke/Programming?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=twopart")
+    const data = await res.json()
+    if (data.type === "twopart") return `Q: ${data.setup}\nA: ${data.delivery}`
+    return data.joke
+  } catch {
+    return "✗ Could not fetch a joke."
+  }
+}
+
+async function fetchWeather(): Promise<string> {
+  try {
+    const geoRes = await fetch("https://ipapi.co/json/")
+    const geo = await geoRes.json()
+    const city = geo.city || "Unknown"
+    const country = geo.country_name || ""
+    const lat = geo.latitude
+    const lon = geo.longitude
+    const res = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code`
+    )
+    const data = await res.json()
+    const c = data.current
+    const WMO: Record<number, string> = {
+      0: "Clear sky", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
+      45: "Foggy", 48: "Icy fog", 51: "Light drizzle", 53: "Drizzle", 55: "Heavy drizzle",
+      61: "Slight rain", 63: "Moderate rain", 65: "Heavy rain",
+      71: "Slight snow", 73: "Moderate snow", 75: "Heavy snow",
+      80: "Slight showers", 81: "Moderate showers", 82: "Violent showers",
+      95: "Thunderstorm", 99: "Thunderstorm with hail",
+    }
+    const desc = WMO[c.weather_code] ?? "Unknown"
+    return `⛅ Weather — ${city}, ${country}\n  Condition : ${desc}\n  Temp      : ${c.temperature_2m}°C (feels like ${c.apparent_temperature}°C)\n  Humidity  : ${c.relative_humidity_2m}%\n  Wind      : ${c.wind_speed_10m} km/h`
+  } catch {
+    return "✗ Could not fetch weather."
+  }
+}
+
+const COOLDOWN_MS = 10_000
+const commandCooldowns: Record<string, number> = {}
+
+function isOnCooldown(cmd: string): boolean {
+  const last = commandCooldowns[cmd] ?? 0
+  return Date.now() - last < COOLDOWN_MS
+}
+
+function setCooldown(cmd: string) {
+  commandCooldowns[cmd] = Date.now()
+}
+
+function isValidUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url.startsWith("http") ? url : `https://${url}`)
+    return parsed.protocol === "http:" || parsed.protocol === "https:"
+  } catch {
+    return false
+  }
+}
+
 let lineIdCounter = 0
 const nextId = () => ++lineIdCounter
 
-const WELCOME_LINES: TerminalLine[] = [
-  { id: nextId(), text: "Welcome to DevOS Terminal v1.0", type: "info" },
-  { id: nextId(), text: 'Type "help" to see available commands.', type: "info" },
-  { id: nextId(), text: "", type: "output" },
+// [text, type, delay-ms after previous]
+const BOOT_SCRIPT: [string, TerminalLine["type"], number][] = [
+  ["$ whoami", "input", 0],
+  ["Sreeyuktha — software engineer, Calicut.", "success", 300],
+  ["", "output", 100],
+  ["$ cat about.txt", "input", 400],
+  ["Endlessly curious about AI and all things cool on the internet.", "output", 300],
+  ["Figuring things out, building fast, turning random curiosity", "output", 200],
+  ["into real, working stuff.", "output", 200],
+  ["", "output", 100],
+  ["Mostly living in the backend — quietly making things", "output", 200],
+  ["reliable and smooth.", "output", 200],
+  ["", "output", 100],
+  ["Also into calligraphy. Good software and good strokes", "output", 200],
+  ["both come down to patience and clean lines.", "output", 200],
+  ["", "output", 200],
+  ["──────────────────────────────────────────", "info", 300],
+  ["Welcome to DevOS Terminal v1.0", "info", 200],
+  ['Type "help" to see available commands.', "info", 200],
+  ["", "output", 0],
 ]
 
 interface TerminalProps {
@@ -68,12 +153,12 @@ export function Terminal({ onCommand }: TerminalProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  // Typewriter effect for welcome message
+  // Boot script typewriter effect
   useEffect(() => {
-    if (welcomeIndex >= WELCOME_LINES.length) return
-    const delay = welcomeIndex === 0 ? 200 : 400
+    if (welcomeIndex >= BOOT_SCRIPT.length) return
+    const [text, type, delay] = BOOT_SCRIPT[welcomeIndex]
     const timer = setTimeout(() => {
-      setLines((prev) => [...prev, WELCOME_LINES[welcomeIndex]])
+      setLines((prev) => [...prev, { id: nextId(), text, type }])
       setWelcomeIndex((i) => i + 1)
     }, delay)
     return () => clearTimeout(timer)
@@ -148,13 +233,40 @@ export function Terminal({ onCommand }: TerminalProps) {
           newLines.push({ id: nextId(), type: "success", text: "→ Toggling theme..." })
           onCommand(trimmed)
           break
+        case "spotify":
+        case "joke":
+        case "weather": {
+          if (isOnCooldown(trimmed)) {
+            const secs = Math.ceil((COOLDOWN_MS - (Date.now() - commandCooldowns[trimmed])) / 1000)
+            newLines.push({ id: nextId(), type: "warning", text: `⏳ Please wait ${secs}s before using ${trimmed} again.` })
+            break
+          }
+          setCooldown(trimmed)
+          const loadingId = nextId()
+          const loadingMsg = trimmed === "spotify" ? "♪ Fetching Spotify..." : trimmed === "joke" ? "⏳ Fetching joke..." : "⏳ Fetching weather..."
+          newLines.push({ id: loadingId, type: "info", text: loadingMsg })
+          setLines(newLines)
+          const fetcher = trimmed === "spotify" ? spotifyNowPlaying : trimmed === "joke" ? fetchJoke : fetchWeather
+          fetcher().then((result) => {
+            setLines((prev) => [
+              ...prev.filter((l) => l.id !== loadingId),
+              { id: nextId(), type: "success", text: result },
+            ])
+          })
+          return
+        }
         default:
           if (trimmed.startsWith("echo ")) {
             newLines.push({ id: nextId(), type: "output", text: cmd.slice(5) })
           } else if (trimmed.startsWith("open ")) {
             const url = cmd.slice(5).trim()
-            newLines.push({ id: nextId(), type: "info", text: `→ Opening: ${url}` })
-            window.open(url.startsWith("http") ? url : `https://${url}`, "_blank")
+            if (!isValidUrl(url)) {
+              newLines.push({ id: nextId(), type: "error", text: `✗ Invalid URL: ${url}` })
+            } else {
+              const fullUrl = url.startsWith("http") ? url : `https://${url}`
+              newLines.push({ id: nextId(), type: "info", text: `→ Opening: ${fullUrl}` })
+              window.open(fullUrl, "_blank", "noopener,noreferrer")
+            }
           } else {
             newLines.push({ id: nextId(), type: "error", text: `command not found: ${trimmed}` })
             newLines.push({ id: nextId(), type: "info", text: 'Type "help" for available commands.' })

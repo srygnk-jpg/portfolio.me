@@ -25,6 +25,7 @@ import { ExperienceContent } from "./windows/ExperienceContent"
 import { ContactContent } from "./windows/ContactContent"
 import { MusicContent } from "./windows/MusicContent"
 import { TicTacToe } from "./TicTacToe"
+import { useNowPlaying } from "./NowPlaying"
 import { useAnimatedStat } from "@/hooks/use-animated-stat"
 
 interface WindowState {
@@ -93,6 +94,8 @@ export function Desktop() {
   const [windows, setWindows] = useState<WindowState[]>([])
   const [nextZIndex, setNextZIndex] = useState(10)
   const [activeWindowId, setActiveWindowId] = useState<string | null>(null)
+
+  const nowPlaying = useNowPlaying()
 
   // Animated stats
   const cpuStat = useAnimatedStat(42, 18, 2000)
@@ -238,12 +241,10 @@ export function Desktop() {
           <div className="glass rounded-xl p-5">
             <div className="flex items-center gap-4 mb-4">
               <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary/30 to-accent/30 text-primary text-2xl font-bold font-mono border border-primary/20">
-                {/* Replace "s" with your initial */}
                 S
                 <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-primary border-2 border-background pulse-glow" title="Online" />
               </div>
               <div>
-                {/* TODO: PERSONALIZE — replace name & role */}
                 <div className="text-base text-foreground font-semibold font-mono">sreeyuktha</div>
                 <div className="text-xs text-terminal-cyan mt-0.5">Backend Developer</div>
               </div>
@@ -254,8 +255,28 @@ export function Desktop() {
               ))}
             </div>
             <div className="text-xs text-muted-foreground font-mono">
-              <span className="text-primary">●</span> Curiously building
+              <span className="text-terminal-cyan" style={{ textShadow: "0 0 6px var(--terminal-cyan), 0 0 12px var(--terminal-cyan)" }}>●</span> Curiously building
             </div>
+
+            {nowPlaying && (
+              <div className="mt-3 pt-3 border-t border-border flex items-center gap-2">
+                {nowPlaying.albumArt ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={nowPlaying.albumArt} alt="album" className="h-7 w-7 rounded-full object-cover flex-shrink-0" />
+                ) : (
+                  <Music2 className="h-4 w-4 text-primary flex-shrink-0" />
+                )}
+                <div className="flex items-end gap-[2px] h-3 flex-shrink-0">
+                  {[0, 1, 2].map((i) => (
+                    <span key={i} className="w-[3px] rounded-sm bg-primary animate-music-bar" style={{ animationDelay: `${i * 0.15}s` }} />
+                  ))}
+                </div>
+                <div className="overflow-hidden">
+                  <div className="text-[11px] text-foreground font-semibold font-mono truncate">{nowPlaying.title}</div>
+                  <div className="text-[10px] text-muted-foreground font-mono truncate">{nowPlaying.artist}</div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* System Stats widget */}
