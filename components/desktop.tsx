@@ -259,7 +259,9 @@ export function Desktop() {
             </div>
 
             {nowPlaying && (
-              <div className="mt-3 pt-3 border-t border-border flex items-center gap-2">
+              <div className="mt-3 pt-3 border-t border-border">
+              <div className="text-[10px] text-muted-foreground font-mono mb-2">▶ currently listening</div>
+              <div className="flex items-center gap-2">
                 {nowPlaying.albumArt ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={nowPlaying.albumArt} alt="album" className="h-7 w-7 rounded-full object-cover flex-shrink-0" />
@@ -275,6 +277,7 @@ export function Desktop() {
                   <div className="text-[11px] text-foreground font-semibold font-mono truncate">{nowPlaying.title}</div>
                   <div className="text-[10px] text-muted-foreground font-mono truncate">{nowPlaying.artist}</div>
                 </div>
+              </div>
               </div>
             )}
           </div>

@@ -21,10 +21,10 @@ const GENRE_COLORS = [
 ]
 
 const MOOD_STYLES: Record<string, { color: string; bg: string; border: string }> = {
-  Focus:    { color: "text-primary",        bg: "bg-primary/10",        border: "border-primary/20" },
-  Energetic:{ color: "text-terminal-cyan",  bg: "bg-terminal-cyan/10",  border: "border-terminal-cyan/20" },
-  Deep:     { color: "text-terminal-yellow", bg: "bg-terminal-yellow/10", border: "border-terminal-yellow/20" },
-  Chill:    { color: "text-accent",         bg: "bg-accent/10",         border: "border-accent/20" },
+  Focus: { color: "text-primary", bg: "bg-primary/10", border: "border-primary/20" },
+  Energetic: { color: "text-terminal-cyan", bg: "bg-terminal-cyan/10", border: "border-terminal-cyan/20" },
+  Deep: { color: "text-terminal-yellow", bg: "bg-terminal-yellow/10", border: "border-terminal-yellow/20" },
+  Chill: { color: "text-accent", bg: "bg-accent/10", border: "border-accent/20" },
 }
 
 function transformN8nData(raw: Record<string, unknown>): MusicData {
@@ -39,7 +39,7 @@ function transformN8nData(raw: Record<string, unknown>): MusicData {
   const totalGenreCount = topGenres.reduce((s, g) => s + g.count, 0) || 1
   const genres = topGenres.map((g, i) => ({
     name: g.name.charAt(0).toUpperCase() + g.name.slice(1),
-    hours: Math.round((g.count / totalGenreCount) * 30 * 10) / 10,
+    hours: Math.round((g.count / totalGenreCount) * 40 * 10) / 10,
     color: GENRE_COLORS[i % GENRE_COLORS.length],
   }))
 
@@ -128,7 +128,7 @@ function GenrePieChart({ genres }: { genres: MusicData["genres"] }) {
         ))}
         <text x="60" y="56" textAnchor="middle" fontSize="9" fill="oklch(0.85 0.02 165)" fontFamily="monospace">total</text>
         <text x="60" y="68" textAnchor="middle" fontSize="11" fill="oklch(0.75 0.18 165)" fontFamily="monospace" fontWeight="bold">
-          {total.toFixed(0)}h
+          {total < 1 ? total.toFixed(1) : total.toFixed(0)}h
         </text>
       </svg>
       <div className="flex flex-col gap-1.5 flex-1 min-w-0">
