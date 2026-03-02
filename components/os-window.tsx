@@ -34,7 +34,6 @@ export function OsWindow({
   const [position, setPosition] = useState(defaultPosition)
   const [size] = useState(defaultSize)
   const [isMaximized, setIsMaximized] = useState(false)
-  const [isEntering] = useState(true)
   const dragRef = useRef<{ startX: number; startY: number; posX: number; posY: number } | null>(null)
   const windowRef = useRef<HTMLDivElement>(null)
 
@@ -90,8 +89,7 @@ export function OsWindow({
   return (
     <div
       ref={windowRef}
-      className={`fixed glass rounded-xl overflow-hidden shadow-2xl flex flex-col transition-shadow duration-200 ${isEntering ? "animate-fade-in-up" : ""
-        } ${isActive
+      className={`fixed glass rounded-xl overflow-hidden shadow-2xl flex flex-col transition-shadow duration-200 animate-fade-in-up ${isActive
           ? "shadow-primary/20 ring-1 ring-primary/25"
           : "shadow-black/40"
         }`}

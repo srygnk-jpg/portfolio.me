@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Music2, Disc3, Star, Zap } from "lucide-react"
 
 interface MusicData {
@@ -123,8 +123,8 @@ function GenrePieChart({ genres }: { genres: MusicData["genres"] }) {
   return (
     <div className="flex items-center gap-4">
       <svg viewBox="0 0 120 120" className="w-24 h-24 shrink-0">
-        {slices.map((s, i) => (
-          <path key={i} d={s.d} fill={s.color} opacity={0.85} className="transition-opacity hover:opacity-100" />
+        {slices.map((s) => (
+          <path key={s.name} d={s.d} fill={s.color} opacity={0.85} className="transition-opacity hover:opacity-100" />
         ))}
         <text x="60" y="56" textAnchor="middle" fontSize="9" fill="oklch(0.85 0.02 165)" fontFamily="monospace">total</text>
         <text x="60" y="68" textAnchor="middle" fontSize="11" fill="oklch(0.75 0.18 165)" fontFamily="monospace" fontWeight="bold">
@@ -132,8 +132,8 @@ function GenrePieChart({ genres }: { genres: MusicData["genres"] }) {
         </text>
       </svg>
       <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-        {slices.map((s, i) => (
-          <div key={i} className="flex items-center gap-2 text-[11px]">
+        {slices.map((s) => (
+          <div key={s.name} className="flex items-center gap-2 text-[11px]">
             <span className="h-2 w-2 rounded-full shrink-0" style={{ background: s.color }} />
             <span className="text-muted-foreground truncate flex-1">{s.name}</span>
             <span className="text-terminal-dim tabular-nums">{s.pct}%</span>
@@ -181,6 +181,11 @@ export function MusicContent() {
       })
   }, [])
 
+  const maxArtistHours = useMemo(
+    () => data ? Math.max(...data.topArtists.map((a) => a.hours)) : 0,
+    [data]
+  )
+
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center font-mono text-xs text-terminal-dim">
@@ -198,7 +203,6 @@ export function MusicContent() {
     )
   }
 
-  const maxArtistHours = Math.max(...data.topArtists.map((a) => a.hours))
   const updatedDate = new Date(data.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })
 
   return (

@@ -36,7 +36,7 @@ export function ContactContent() {
   const onSubmit = async (data: ContactForm) => {
     setSubmitStatus("sending")
     try {
-      const res = await fetch("https://formspree.io/f/xreadjnq", {
+      const res = await fetch(process.env.NEXT_PUBLIC_FORMSPREE_URL!, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(data),

@@ -91,7 +91,7 @@ export function BootScreen({ onComplete }: { onComplete: () => void }) {
         {/* Boot log */}
         <div className="mb-6 font-mono text-xs sm:text-sm min-h-[200px]">
           {bootLines.slice(0, visibleLines).map((line, i) => (
-            <div key={i} className="flex items-center gap-2 leading-6">
+            <div key={line.delay} className="flex items-center gap-2 leading-6">
               {line.color === "blank" ? (
                 <span>&nbsp;</span>
               ) : (

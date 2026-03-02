@@ -4,13 +4,14 @@ import { useState, useCallback, useEffect } from "react"
 import { BootScreen } from "@/components/boot-screen"
 import { Desktop } from "@/components/desktop"
 import { MobileLayout } from "@/components/mobile-layout"
+import { MOBILE_BREAKPOINT } from "@/lib/constants"
 
 export default function Home() {
   const [booted, setBooted] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 1024)
+    const check = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
     check()
     window.addEventListener("resize", check)
     return () => window.removeEventListener("resize", check)

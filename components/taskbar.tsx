@@ -1,6 +1,9 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
+import { ANIMATION } from "@/lib/constants"
+
+const { TOAST_TIMEOUT } = ANIMATION
 import {
   TerminalSquare,
   User,
@@ -39,8 +42,6 @@ const desktopIcons = [
   { id: "music", label: "Music Analytics", icon: Music2 },
 ]
 
-let toastIdCounter = 0
-
 export function Taskbar({
   openWindows,
   activeWindowId,
@@ -50,6 +51,7 @@ export function Taskbar({
   const [time, setTime] = useState("")
   const [dateStr, setDateStr] = useState("")
   const [toasts, setToasts] = useState<Toast[]>([])
+  const toastIdRef = useRef(0)
 
   useEffect(() => {
     const update = () => {
@@ -75,11 +77,11 @@ export function Taskbar({
   }, [])
 
   const pushToast = useCallback((icon: string, title: string, body: string) => {
-    const id = ++toastIdCounter
+    const id = ++toastIdRef.current
     setToasts((prev) => [...prev, { id, icon, title, body }])
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id))
-    }, 3500)
+    }, TOAST_TIMEOUT)
   }, [])
 
   // Light mode is forbidden here — light attracts bugs 🐛

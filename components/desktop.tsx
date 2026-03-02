@@ -24,6 +24,7 @@ import { SkillsContent } from "./windows/SkillsContent"
 import { ExperienceContent } from "./windows/ExperienceContent"
 import { ContactContent } from "./windows/ContactContent"
 import { MusicContent } from "./windows/MusicContent"
+import { TicTacToe } from "./TicTacToe"
 import { useAnimatedStat } from "@/hooks/use-animated-stat"
 
 interface WindowState {
@@ -307,7 +308,16 @@ export function Desktop() {
           </div>
         </div>
 
-        {/* Desktop hint */}
+        {/* Tic-Tac-Toe — shown when all windows are closed/minimized */}
+        {windows.filter((w) => !w.isMinimized).length === 0 && (
+          <div className="absolute inset-0 flex items-center justify-center z-[1] pointer-events-none">
+            <div className="pointer-events-auto">
+              <TicTacToe />
+            </div>
+          </div>
+        )}
+
+        {/* Desktop hint — shown when <=1 window open */}
         {windows.length <= 1 && (
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[1] animate-fade-in-up">
             <div className="glass rounded-full px-5 py-2 text-xs text-muted-foreground font-mono">
