@@ -66,7 +66,7 @@ export function BootScreen({ onComplete }: { onComplete: () => void }) {
 
   return (
     <div
-      className={`fixed inset-0 bg-background z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-600 ${
+      className={`fixed inset-0 bg-background z-50 flex flex-col items-center justify-center p-6 overflow-hidden transition-opacity duration-600 ${
         fadeOut ? "opacity-0" : "opacity-100"
       }`}
     >
@@ -75,8 +75,8 @@ export function BootScreen({ onComplete }: { onComplete: () => void }) {
 
       <div className="relative z-10 w-full max-w-2xl">
         {/* ASCII Logo */}
-        <div className="mb-8 text-center flicker">
-          <pre className="text-primary glow-green text-xs leading-tight sm:text-sm select-none">
+        <div className="mb-8 text-center flicker overflow-hidden">
+          <pre className="text-primary glow-green leading-tight select-none text-[6px] sm:text-xs md:text-sm">
 {`
   ██████╗ ███████╗██╗   ██╗ ██████╗ ███████╗
   ██╔══██╗██╔════╝██║   ██║██╔═══██╗██╔════╝

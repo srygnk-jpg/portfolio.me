@@ -60,32 +60,26 @@ export function ContactContent() {
 
       {/* Quick links row — always visible */}
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 flex-1 rounded-lg border border-border bg-secondary/20 px-3 py-2">
+        {/* Email box with inline copy button */}
+        <div className="flex items-center gap-2 flex-1 rounded-lg border border-border bg-secondary/20 px-3 py-2 min-w-0">
           <Mail className="h-3.5 w-3.5 text-terminal-cyan shrink-0" />
-          <span className="text-xs text-foreground flex-1 truncate">{EMAIL}</span>
+          <span className="text-xs text-terminal-dim font-mono flex-1 truncate">{EMAIL}</span>
           <button
             onClick={copyEmail}
-            className="text-[10px] rounded px-2 py-1 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors shrink-0"
+            className="text-[10px] rounded px-2 py-0.5 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors shrink-0 font-mono"
           >
-            {copied ? "✓ copied!" : "copy"}
+            {copied ? "✓" : "copy"}
           </button>
         </div>
+        {/* LinkedIn icon button */}
         <a
           href="https://www.linkedin.com/in/sreeyukthagnk/"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary/20 px-3 py-2 text-xs text-muted-foreground hover:text-terminal-cyan hover:border-terminal-cyan/30 transition-colors shrink-0"
+          title="LinkedIn"
+          className="flex items-center justify-center rounded-lg border border-border bg-secondary/20 px-3 py-2 text-muted-foreground hover:text-terminal-cyan hover:border-terminal-cyan/30 transition-colors shrink-0"
         >
-          <Linkedin className="h-3.5 w-3.5" />
-          LinkedIn
-          <ExternalLink className="h-2.5 w-2.5" />
-        </a>
-        <a
-          href={`mailto:${EMAIL}`}
-          className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary/20 px-3 py-2 text-xs text-muted-foreground hover:text-terminal-yellow hover:border-terminal-yellow/30 transition-colors shrink-0"
-        >
-          <Mail className="h-3.5 w-3.5" />
-          Email
+          <Linkedin className="h-4 w-4" />
         </a>
       </div>
 

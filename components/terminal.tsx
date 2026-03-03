@@ -241,8 +241,8 @@ export function Terminal({ onCommand }: TerminalProps) {
         case "resume":
           newLines.push({ id: nextId(), type: "info", text: "→ Opening resume..." })
           newLines.push({
-            id: nextId(), type: "warning",
-            text: "[INFO] resume.pdf not found in /public — add your resume to /public/resume.pdf",
+            id: nextId(), type: "output",
+            text: "No PDF attached here — drop a line at srygnk@gmail.com and I'll send it over.",
           })
           break
         case "about":
