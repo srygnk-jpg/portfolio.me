@@ -19,7 +19,6 @@ type ContactForm = z.infer<typeof contactSchema>
 export function ContactContent() {
   const [copied, setCopied] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
-  const [errorMsg, setErrorMsg] = useState("")
 
   const {
     register,
@@ -37,7 +36,7 @@ export function ContactContent() {
   const onSubmit = async (data: ContactForm) => {
     setSubmitStatus("sending")
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_FORMSPREE_URL!, {
+      const res = await fetch("https://formspree.io/f/xreadjnq", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(data),
@@ -46,12 +45,11 @@ export function ContactContent() {
         setSubmitStatus("success")
         reset()
       } else {
-        const body = await res.json().catch(() => ({}))
-        setErrorMsg(`${res.status}: ${body?.error ?? JSON.stringify(body)}`)
+        console.error("Formspree error", res.status, await res.json().catch(() => ({})))
         setSubmitStatus("error")
       }
     } catch (e) {
-      setErrorMsg(e instanceof Error ? e.message : String(e))
+      console.error("Formspree fetch failed", e)
       setSubmitStatus("error")
     }
   }
@@ -142,7 +140,7 @@ export function ContactContent() {
             )}
           </div>
           {submitStatus === "error" && (
-            <div className="text-[11px] text-red-400">⚠ Something went wrong. Try emailing directly.{errorMsg && <span className="block opacity-70">{errorMsg}</span>}</div>
+            <div className="text-[11px] text-red-400">⚠ Something went wrong. Try emailing directly.</div>
           )}
           <button
             type="submit"
