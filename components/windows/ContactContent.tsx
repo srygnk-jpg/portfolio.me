@@ -19,6 +19,7 @@ type ContactForm = z.infer<typeof contactSchema>
 export function ContactContent() {
   const [copied, setCopied] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
+  const [errorMsg, setErrorMsg] = useState("")
 
   const {
     register,
@@ -45,9 +46,12 @@ export function ContactContent() {
         setSubmitStatus("success")
         reset()
       } else {
+        const body = await res.json().catch(() => ({}))
+        setErrorMsg(`${res.status}: ${body?.error ?? JSON.stringify(body)}`)
         setSubmitStatus("error")
       }
-    } catch {
+    } catch (e) {
+      setErrorMsg(e instanceof Error ? e.message : String(e))
       setSubmitStatus("error")
     }
   }
@@ -138,7 +142,7 @@ export function ContactContent() {
             )}
           </div>
           {submitStatus === "error" && (
-            <div className="text-[11px] text-red-400">⚠ Something went wrong. Try emailing directly.</div>
+            <div className="text-[11px] text-red-400">⚠ Something went wrong. Try emailing directly.{errorMsg && <span className="block opacity-70">{errorMsg}</span>}</div>
           )}
           <button
             type="submit"
